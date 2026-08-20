@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Préstamos Rápidos y Flexibles | Tu Solución Financiera</title>
+  <meta name="description" content="Solicita tu préstamo personal de forma rápida, segura y 100% online. Evaluación en minutos." />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0f766e',
+            primaryDark: '#0d5c56',
+            accent: '#14b8a6'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+  <!-- ========== HERO ========== -->
+  <header class="bg-gradient-to-br from-primary to-primaryDark text-white">
+    <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 text-center">
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
+        Préstamos rápidos,<br class="hidden md:block" /> flexibles y a tu medida
+      </h1>
+      <p class="text-lg md:text-xl text-teal-100 max-w-2xl mx-auto mb-10">
+        Obtén el dinero que necesitas de forma simple, transparente y con respuesta en menos de 24 horas.
+      </p>
+      <a href="#formulario"
+         class="inline-block bg-white text-primary font-semibold px-8 py-4 rounded-full shadow-lg hover:bg-teal-50 transition transform hover:scale-105">
+        Solicitar préstamo ahora
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== PROCESO ========== -->
+  <section class="py-16 md:py-20 bg-white">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Cómo trabajamos</h2>
+      <p class="text-center text-slate-600 mb-12 max-w-xl mx-auto">
+        Un proceso simple, claro y sin complicaciones.
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div class="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">1</div>
+          <h3 class="font-semibold text-lg mb-2">Completa el formulario</h3>
+          <p class="text-slate-600 text-sm">Cuéntanos cuánto necesitas y cómo contactarte.</p>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">2</div>
+          <h3 class="font-semibold text-lg mb-2">Evaluamos tu solicitud</h3>
+          <p class="text-slate-600 text-sm">Revisamos tu perfil de forma rápida y confidencial.</p>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">3</div>
+          <h3 class="font-semibold text-lg mb-2">Te contactamos</h3>
+          <p class="text-slate-600 text-sm">Nos comunicamos por WhatsApp, teléfono o email.</p>
+        </div>
+        <div class="text-center p-6 rounded-2xl bg-slate-50 border border-slate-100">
+          <div class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">4</div>
+          <h3 class="font-semibold text-lg mb-2">Firmamos y transferimos</h3>
+          <p class="text-slate-600 text-sm">Firmamos el contrato y recibes tu dinero.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FORMULARIO ========== -->
+  <section id="formulario" class="py-16 md:py-20 bg-slate-100">
+    <div class="max-w-xl mx-auto px-4">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-10">
+        <h2 class="text-2xl md:text-3xl font-bold text-center mb-2">Solicita tu préstamo</h2>
+        <p class="text-center text-slate-600 mb-8">Completa el formulario y te contactamos a la brevedad.</p>
+
+        <form id="form-solicitud" class="space-y-5">
+          <div>
+            <label for="nombre_completo" class="block text-sm font-medium text-slate-700 mb-1">Nombre completo *</label>
+            <input type="text" id="nombre_completo" name="nombre_completo" required
+                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                   placeholder="Juan Pérez" />
+          </div>
+
+          <div>
+            <label for="telefono" class="block text-sm font-medium text-slate-700 mb-1">Teléfono / WhatsApp *</label>
+            <input type="tel" id="telefono" name="telefono" required
+                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                   placeholder="+54 9 299 328-7480" />
+          </div>
+
+          <div>
+            <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email *</label>
+            <input type="email" id="email" name="email" required
+                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                   placeholder="juan@email.com" />
+          </div>
+
+          <div>
+            <label for="monto_aproximado" class="block text-sm font-medium text-slate-700 mb-1">Monto aproximado que necesitas *</label>
+            <input type="number" id="monto_aproximado" name="monto_aproximado" required min="1000" step="100"
+                   class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition"
+                   placeholder="50000" />
+          </div>
+
+          <div>
+            <label for="horario_preferido" class="block text-sm font-medium text-slate-700 mb-1">Horario preferido de contacto</label>
+            <select id="horario_preferido" name="horario_preferido"
+                    class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition">
+              <option value="">Sin preferencia</option>
+              <option value="Mañana (9-12hs)">Mañana (9-12hs)</option>
+              <option value="Mediodía (12-15hs)">Mediodía (12-15hs)</option>
+              <option value="Tarde (15-19hs)">Tarde (15-19hs)</option>
+              <option value="Noche (después de 19hs)">Noche (después de 19hs)</option>
+            </select>
+          </div>
+
+          <button type="submit" id="btn-enviar"
+                  class="w-full bg-primary hover:bg-primaryDark text-white font-semibold py-4 rounded-lg transition shadow-md disabled:opacity-60 disabled:cursor-not-allowed">
+            Enviar solicitud
+          </button>
+        </form>
+
+        <!-- Mensajes de estado -->
+        <div id="mensaje-exito" class="hidden mt-6 p-4 bg-green-50 border border-green-200 text-green-800 rounded-lg text-center">
+          ¡Solicitud enviada correctamente! Te contactaremos pronto.
+        </div>
+        <div id="mensaje-error" class="hidden mt-6 p-4 bg-red-50 border border-red-200 text-red-800 rounded-lg text-center">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== REFERIDOS ========== -->
+  <section class="py-16 md:py-20 bg-gradient-to-r from-teal-600 to-primary text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Programa de Referidos</h2>
+      <p class="text-lg text-teal-100 mb-8 max-w-2xl mx-auto">
+        ¿Conoces a alguien que necesite un préstamo? Refiérelo y gana dinero o beneficios cuando se concrete el préstamo.
+      </p>
+      <a href="https://wa.me/5492993287480?text=Hola%2C%20quiero%20consultar%20sobre%20el%20programa%20de%20referidos"
+         target="_blank" rel="noopener"
+         class="inline-flex items-center gap-2 bg-white text-primary font-semibold px-8 py-4 rounded-full shadow-lg hover:bg-teal-50 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.435 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        Consultar programa de referidos
+      </a>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="bg-slate-900 text-slate-300 py-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-3">Contacto</h3>
+          <p class="text-sm">WhatsApp: +54 9 299 328-7480</p>
+          <p class="text-sm">Email: info@tuprestamo.com</p>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-3">Legal</h3>
+          <p class="text-sm"><a href="/terminos" class="hover:text-white underline">Términos y condiciones</a></p>
+          <p class="text-sm"><a href="/privacidad" class="hover:text-white underline">Política de privacidad</a></p>
+        </div>
+        <div>
+          <h3 class="text-white font-semibold text-lg mb-3">Horario de atención</h3>
+          <p class="text-sm">Lunes a Viernes: 9:00 - 18:00</p>
+          <p class="text-sm">Sábados: 9:00 - 13:00</p>
+        </div>
+      </div>
+      <div class="border-t border-slate-700 pt-6 text-center text-sm">
+        © 2026 Tu Préstamo. Todos los derechos reservados.
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

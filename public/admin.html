@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Solicitudes de Préstamos</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#0f766e',
+            primaryDark: '#0d5c56'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 min-h-screen">
+
+  <!-- ========== LOGIN ========== -->
+  <div id="login-section" class="min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+      <h1 class="text-2xl font-bold text-center text-slate-800 mb-2">Panel de Administración</h1>
+      <p class="text-center text-slate-500 mb-6 text-sm">Ingresá tu contraseña para continuar</p>
+
+      <form id="form-login" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Contraseña</label>
+          <input type="password" id="password" required
+                 class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary focus:border-transparent outline-none"
+                 placeholder="••••••••" />
+        </div>
+        <button type="submit" id="btn-login"
+                class="w-full bg-primary hover:bg-primaryDark text-white font-semibold py-3 rounded-lg transition">
+          Ingresar
+        </button>
+      </form>
+
+      <div id="login-error" class="hidden mt-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm text-center"></div>
+    </div>
+  </div>
+
+  <!-- ========== PANEL ========== -->
+  <div id="admin-section" class="hidden">
+    <!-- Header -->
+    <header class="bg-primary text-white shadow">
+      <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        <h1 class="text-xl font-bold">Solicitudes de Préstamos</h1>
+        <div class="flex items-center gap-4">
+          <button id="btn-refresh" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition">
+            Actualizar
+          </button>
+          <button id="btn-logout" class="text-sm bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg transition">
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenido -->
+    <main class="max-w-7xl mx-auto px-4 py-8">
+      <!-- Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase">Total</p>
+          <p id="stat-total" class="text-2xl font-bold text-slate-800">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase">Pendientes</p>
+          <p id="stat-pendiente" class="text-2xl font-bold text-amber-600">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase">Contactados</p>
+          <p id="stat-contactado" class="text-2xl font-bold text-blue-600">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase">Aprobados</p>
+          <p id="stat-aprobado" class="text-2xl font-bold text-green-600">0</p>
+        </div>
+        <div class="bg-white rounded-xl p-4 shadow-sm border border-slate-200">
+          <p class="text-xs text-slate-500 uppercase">Rechazados</p>
+          <p id="stat-rechazado" class="text-2xl font-bold text-red-600">0</p>
+        </div>
+      </div>
+
+      <!-- Tabla -->
+      <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-slate-50 border-b border-slate-200">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Fecha</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Nombre</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Teléfono</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Email</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Monto</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Horario</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-600">Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tabla-body">
+              <!-- Se llena con JS -->
+            </tbody>
+          </table>
+        </div>
+        <div id="empty-state" class="hidden py-12 text-center text-slate-500">
+          No hay solicitudes todavía.
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const loginSection = document.getElementById('login-section');
+    const adminSection = document.getElementById('admin-section');
+    const formLogin = document.getElementById('form-login');
+    const loginError = document.getElementById('login-error');
+    const btnLogout = document.getElementById('btn-logout');
+    const btnRefresh = document.getElementById('btn-refresh');
+    const tablaBody = document.getElementById('tabla-body');
+    const emptyState = document.getElementById('empty-state');
+
+    // Colores por estado
+    const estadoColors = {
+      pendiente: 'bg-amber-100 text-amber-800',
+      contactado: 'bg-blue-100 text-blue-800',
+      aprobado: 'bg-green-100 text-green-800',
+      rechazado: 'bg-red-100 text-red-800',
+      completado: 'bg-slate-100 text-slate-800'
+    };
+
+    // Verificar si ya hay token
+    function checkAuth() {
+      const token = localStorage.getItem('admin_token');
+      if (token) {
+        showAdmin();
+        loadSolicitudes();
+      }
+    }
+
+    function showAdmin() {
+      loginSection.classList.add('hidden');
+      adminSection.classList.remove('hidden');
+    }
+
+    function showLogin() {
+      adminSection.classList.add('hidden');
+      loginSection.classList.remove('hidden');
+      localStorage.removeItem('admin_token');
+    }
+
+    // Login
+    formLogin.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      loginError.classList.add('hidden');
+
+      const password = document.getElementById('password').value;
+
+      try {
+        const res = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          localStorage.setItem('admin_token', data.token);
+          showAdmin();
+          loadSolicitudes();
+        } else {
+          loginError.textContent = data.error || 'Error al iniciar sesión';
+          loginError.classList.remove('hidden');
+        }
+      } catch (err) {
+        loginError.textContent = 'Error de conexión';
+        loginError.classList.remove('hidden');
+      }
+    });
+
+    // Logout
+    btnLogout.addEventListener('click', showLogin);
+    btnRefresh.addEventListener('click', loadSolicitudes);
+
+    // Cargar solicitudes
+    async function loadSolicitudes() {
+      const token = localStorage.getItem('admin_token');
+      if (!token) return showLogin();
+
+      try {
+        const res = await fetch('/api/admin/solicitudes', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.status === 401 || res.status === 403) {
+          showLogin();
+          return;
+        }
+
+        const result = await res.json();
+        if (!result.success) {
+          alert(result.error || 'Error al cargar');
+          return;
+        }
+
+        renderTabla(result.data);
+        updateStats(result.data);
+      } catch (err) {
+        console.error(err);
+        alert('Error de conexión');
+      }
+    }
+
+    function renderTabla(data) {
+      tablaBody.innerHTML = '';
+
+      if (!data || data.length === 0) {
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      data.forEach(s => {
+        const fecha = new Date(s.created_at).toLocaleString('es-AR', {
+          day: '2-digit', month: '2-digit', year: 'numeric',
+          hour: '2-digit', minute: '2-digit'
+        });
+
+        const monto = Number(s.monto_aproximado).toLocaleString('es-AR');
+
+        const tr = document.createElement('tr');
+        tr.className = 'border-b border-slate-100 hover:bg-slate-50';
+        tr.innerHTML = `
+          <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${fecha}</td>
+          <td class="px-4 py-3 font-medium text-slate-800">${escapeHtml(s.nombre_completo)}</td>
+          <td class="px-4 py-3">
+            <a href="https://wa.me/${s.telefono.replace(/\D/g, '')}" target="_blank" class="text-primary hover:underline">
+              ${escapeHtml(s.telefono)}
+            </a>
+          </td>
+          <td class="px-4 py-3">
+            <a href="mailto:${escapeHtml(s.email)}" class="text-primary hover:underline">${escapeHtml(s.email)}</a>
+          </td>
+          <td class="px-4 py-3 font-medium">$${monto}</td>
+          <td class="px-4 py-3 text-slate-600">${escapeHtml(s.horario_preferido || '-')}</td>
+          <td class="px-4 py-3">
+            <select data-id="${s.id}" class="estado-select text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer ${estadoColors[s.estado] || ''}">
+              <option value="pendiente" ${s.estado === 'pendiente' ? 'selected' : ''}>Pendiente</option>
+              <option value="contactado" ${s.estado === 'contactado' ? 'selected' : ''}>Contactado</option>
+              <option value="aprobado" ${s.estado === 'aprobado' ? 'selected' : ''}>Aprobado</option>
+              <option value="rechazado" ${s.estado === 'rechazado' ? 'selected' : ''}>Rechazado</option>
+              <option value="completado" ${s.estado === 'completado' ? 'selected' : ''}>Completado</option>
+            </select>
+          </td>
+        `;
+        tablaBody.appendChild(tr);
+      });
+
+      // Eventos de cambio de estado
+      document.querySelectorAll('.estado-select').forEach(select => {
+        select.addEventListener('change', async (e) => {
+          const id = e.target.dataset.id;
+          const estado = e.target.value;
+          await updateEstado(id, estado);
+          // Actualizar color
+          e.target.className = `estado-select text-xs font-medium px-2 py-1 rounded-full border-0 cursor-pointer ${estadoColors[estado] || ''}`;
+          loadSolicitudes(); // refrescar stats
+        });
+      });
+    }
+
+    async function updateEstado(id, estado) {
+      const token = localStorage.getItem('admin_token');
+      try {
+        await fetch(`/api/admin/solicitudes/${id}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ estado })
+        });
+      } catch (err) {
+        console.error(err);
+        alert('Error al actualizar estado');
+      }
+    }
+
+    function updateStats(data) {
+      document.getElementById('stat-total').textContent = data.length;
+      document.getElementById('stat-pendiente').textContent = data.filter(s => s.estado === 'pendiente').length;
+      document.getElementById('stat-contactado').textContent = data.filter(s => s.estado === 'contactado').length;
+      document.getElementById('stat-aprobado').textContent = data.filter(s => s.estado === 'aprobado').length;
+      document.getElementById('stat-rechazado').textContent = data.filter(s => s.estado === 'rechazado').length;
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Iniciar
+    checkAuth();
+  </script>
+</body>
+</html>

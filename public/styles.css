@@ -1,0 +1,14 @@
+/* Estilos complementarios (Tailwind ya hace la mayor parte) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Mejoras de accesibilidad y focus */
+input:focus, select:focus, button:focus {
+  outline: none;
+}
+
+/* Animación suave del botón */
+button, a {
+  transition: all 0.2s ease;
+}
