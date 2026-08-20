@@ -9,10 +9,9 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Necesario en Render (proxy) para que rate-limit funcione bien
+// ACTIVAR TRUST PROXY PARA RENDER
 app.set('trust proxy', 1);
 
-// ========== Supabase ==========
 const supabase = createClient(
     process.env.SUPABASE_URL,
     process.env.SUPABASE_SERVICE_ROLE_KEY
@@ -23,11 +22,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Rate limiting
+// Rate limiting (con validación deshabilitada para Render)
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000,
     max: 40,
-    message: { error: 'Demasiadas solicitudes. Intenta más tarde.' }
+    message: { error: 'Demasiadas solicitudes. Intenta más tarde.' },
+    validate: { xForwardedForHeader: false }
 });
 app.use('/api/', limiter);
 
@@ -265,11 +265,9 @@ app.patch('/api/admin/solicitudes/:id', requireAdmin, async (req, res) => {
 app.get('/admin', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'admin.html'));
 });
-
 app.get('/terminos', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'terminos.html'));
 });
-
 app.get('/privacidad', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'privacidad.html'));
 });
@@ -281,6 +279,5 @@ app.get('*', (req, res) => {
 
 // ========== Arranque ==========
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
-    console.log(`Panel admin: http://localhost:${PORT}/admin`);
+    console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
