@@ -12,9 +12,10 @@ const PORT = process.env.PORT || 3000;
 // ACTIVAR TRUST PROXY PARA RENDER
 app.set('trust proxy', 1);
 
-const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
+console.log('DEBUG trust proxy:', app.get('trust proxy'));
+console.log(
+    'DEBUG express-rate-limit:',
+    require('express-rate-limit/package.json').version
 );
 
 // ========== Middlewares ==========
