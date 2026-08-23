@@ -335,19 +335,19 @@
 
           const mensajes = {
               pendiente:
-                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Queríamos comunicarnos con vos para continuar con la solicitud.`,
+                  `Hola ${solicitud.nombre_completo}, ¿cómo estás? Somos de Alto Valle Préstamos. Recibimos tu solicitud de préstamo por $${monto} y queremos comunicarnos con vos para continuar con el proceso. Cuando puedas, respondé este mensaje. ¡Gracias!`,
 
               contactado:
-                  `Hola ${solicitud.nombre_completo}, te contactamos nuevamente por tu solicitud de préstamo de $${monto}.`,
+                  `Hola ${solicitud.nombre_completo}, ¿cómo estás? Somos de Alto Valle Préstamos. Te contactamos nuevamente por tu solicitud de préstamo de $${monto} para poder continuar con el proceso. Cuando puedas, respondé este mensaje.`,
 
               aprobado:
-                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Tu solicitud fue aprobada. Nos gustaría coordinar con vos los próximos pasos.`,
+                  `Hola ${solicitud.nombre_completo}, ¿cómo estás? Te contactamos desde Alto Valle Préstamos. Tu solicitud de préstamo por $${monto} fue aprobada. Para continuar y coordinar los próximos pasos, respondé a este mensaje y te asesoramos. ¡Gracias!`,
 
               rechazado:
-                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Queríamos informarte que tu solicitud no pudo ser aprobada en esta oportunidad.`,
+                  `Hola ${solicitud.nombre_completo}, ¿cómo estás? Te contactamos desde Alto Valle Préstamos. Luego de revisar tu solicitud de préstamo por $${monto}, en esta oportunidad no podremos avanzar con el préstamo solicitado. Agradecemos que hayas confiado en nosotros. Si tenés alguna consulta, podés escribirnos por este medio.`,
 
               completado:
-                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. La solicitud figura como completada.`
+                  `Hola ${solicitud.nombre_completo}, ¿cómo estás? Somos de Alto Valle Préstamos. Tu solicitud de préstamo por $${monto} fue marcada como completada. Muchas gracias por comunicarte con nosotros.`
           };
 
           const mensaje = mensajes[solicitud.estado] || mensajes.pendiente;
