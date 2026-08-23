@@ -12,6 +12,11 @@ const PORT = process.env.PORT || 3000;
 // ACTIVAR TRUST PROXY PARA RENDER
 app.set('trust proxy', 1);
 
+const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
 // ========== Middlewares ==========
 app.use(cors());
 app.use(express.json());
