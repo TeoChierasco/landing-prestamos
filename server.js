@@ -12,8 +12,6 @@ const PORT = process.env.PORT || 3000;
 // ACTIVAR TRUST PROXY PARA RENDER
 app.set('trust proxy', 1);
 
-console.log('DEBUG trust proxy:', app.get('trust proxy'));
-
 // ========== Middlewares ==========
 app.use(cors());
 app.use(express.json());
