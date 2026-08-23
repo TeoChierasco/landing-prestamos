@@ -13,10 +13,6 @@ const PORT = process.env.PORT || 3000;
 app.set('trust proxy', 1);
 
 console.log('DEBUG trust proxy:', app.get('trust proxy'));
-console.log(
-    'DEBUG express-rate-limit:',
-    require('express-rate-limit/package.json').version
-);
 
 // ========== Middlewares ==========
 app.use(cors());
