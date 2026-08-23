@@ -239,10 +239,23 @@
           <td class="px-4 py-3 text-slate-600 whitespace-nowrap">${fecha}</td>
           <td class="px-4 py-3 font-medium text-slate-800">${escapeHtml(s.nombre_completo)}</td>
           <td class="px-4 py-3">
-            <a href="https://wa.me/${s.telefono.replace(/\D/g, '')}" target="_blank" class="text-primary hover:underline">
-              ${escapeHtml(s.telefono)}
-            </a>
-          </td>
+  <div class="flex flex-col gap-1">
+    <a href="https://wa.me/${getWhatsAppNumber(s.telefono)}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="text-primary hover:underline">
+      ${escapeHtml(s.telefono)}
+    </a>
+
+    <a href="${getWhatsAppLink(s)}"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="inline-flex items-center w-fit gap-1 text-green-600 hover:text-green-700 font-medium">
+      💬 WhatsApp
+    </a>
+  </div>
+</td>
+
           <td class="px-4 py-3">
             <a href="mailto:${escapeHtml(s.email)}" class="text-primary hover:underline">${escapeHtml(s.email)}</a>
           </td>
@@ -298,6 +311,49 @@
       document.getElementById('stat-aprobado').textContent = data.filter(s => s.estado === 'aprobado').length;
       document.getElementById('stat-rechazado').textContent = data.filter(s => s.estado === 'rechazado').length;
     }
+
+      function getWhatsAppNumber(telefono) {
+          let digits = String(telefono || '').replace(/\D/g, '');
+
+          // Si ya viene con código de país
+          if (digits.startsWith('54')) {
+              return digits;
+          }
+
+          // Número argentino almacenado con 9 + código de área + número
+          if (digits.startsWith('9')) {
+              return '54' + digits;
+          }
+
+          // Número argentino de 10 dígitos sin el 9
+          return '549' + digits;
+      }
+
+      function getWhatsAppLink(solicitud) {
+          const numero = getWhatsAppNumber(solicitud.telefono);
+          const monto = Number(solicitud.monto_aproximado).toLocaleString('es-AR');
+
+          const mensajes = {
+              pendiente:
+                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Queríamos comunicarnos con vos para continuar con la solicitud.`,
+
+              contactado:
+                  `Hola ${solicitud.nombre_completo}, te contactamos nuevamente por tu solicitud de préstamo de $${monto}.`,
+
+              aprobado:
+                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Tu solicitud fue aprobada. Nos gustaría coordinar con vos los próximos pasos.`,
+
+              rechazado:
+                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. Queríamos informarte que tu solicitud no pudo ser aprobada en esta oportunidad.`,
+
+              completado:
+                  `Hola ${solicitud.nombre_completo}, te contactamos por tu solicitud de préstamo de $${monto}. La solicitud figura como completada.`
+          };
+
+          const mensaje = mensajes[solicitud.estado] || mensajes.pendiente;
+
+          return `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}`;
+      }
 
     function escapeHtml(text) {
       if (!text) return '';
