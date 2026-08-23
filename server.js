@@ -143,6 +143,95 @@ async function enviarNotificacionEmail(solicitud) {
     }
 }
 
+// ========== Notificación al cliente por cambio de estado ==========
+async function enviarNotificacionCambioEstado(solicitud, nuevoEstado) {
+    const apiKey = process.env.RESEND_API_KEY;
+
+    if (!apiKey) {
+        console.log('Notificación al cliente desactivada (falta RESEND_API_KEY)');
+        return;
+    }
+
+    if (!solicitud.email) {
+        console.log('No se puede notificar al cliente: la solicitud no tiene email');
+        return;
+    }
+
+    const estados = {
+        contactado: {
+            titulo: 'Tu solicitud fue contactada',
+            mensaje: 'Nos hemos puesto en contacto con vos para continuar con tu solicitud.'
+        },
+        aprobado: {
+            titulo: 'Tu solicitud fue aprobada',
+            mensaje: 'Tu solicitud de préstamo fue aprobada. Nos estaremos comunicando con vos para continuar con el proceso.'
+        },
+        rechazado: {
+            titulo: 'Actualización de tu solicitud',
+            mensaje: 'Tu solicitud de préstamo no pudo ser aprobada en esta oportunidad. Si tenés alguna consulta, podés comunicarte con nosotros.'
+        },
+        completado: {
+            titulo: 'Solicitud completada',
+            mensaje: 'Tu solicitud de préstamo ha sido marcada como completada.'
+        }
+    };
+
+    const estadoInfo = estados[nuevoEstado];
+
+    if (!estadoInfo) {
+        return;
+    }
+
+    try {
+        const response = await fetch('https://api.resend.com/emails', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${apiKey}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                from: 'Solicitudes <onboarding@resend.dev>',
+                to: [solicitud.email],
+                subject: estadoInfo.titulo,
+                html: `
+                    <h2>${estadoInfo.titulo}</h2>
+
+                    <p>Hola <strong>${solicitud.nombre_completo}</strong>.</p>
+
+                    <p>${estadoInfo.mensaje}</p>
+
+                    <hr>
+
+                    <p>
+                        <strong>Monto solicitado:</strong>
+                        $${Number(solicitud.monto_aproximado).toLocaleString('es-AR')}
+                    </p>
+
+                    <p>
+                        <strong>Estado:</strong>
+                        ${nuevoEstado.charAt(0).toUpperCase() + nuevoEstado.slice(1)}
+                    </p>
+
+                    <p>
+                        Si necesitás comunicarte con nosotros, podés hacerlo utilizando
+                        los medios de contacto disponibles en nuestra página web.
+                    </p>
+                `
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.text();
+            console.error('Error enviando email al cliente:', err);
+        } else {
+            console.log('Notificación enviada al cliente:', solicitud.email);
+        }
+
+    } catch (err) {
+        console.error('Error en notificación al cliente:', err.message);
+    }
+}
+
 // ========== Endpoint público: crear solicitud ==========
 app.post('/api/solicitudes', async (req, res) => {
     try {
@@ -251,8 +340,13 @@ app.patch('/api/admin/solicitudes/:id', requireAdmin, async (req, res) => {
 
         if (error) {
             console.error('Error Supabase:', error);
-            return res.status(500).json({ success: false, error: 'Error al actualizar' });
+            return res.status(500).json({
+                success: false,
+                error: 'Error al actualizar'
+            });
         }
+
+        enviarNotificacionCambioEstado(data, estado).catch(() => { });
 
         return res.json({ success: true, data });
     } catch (err) {
