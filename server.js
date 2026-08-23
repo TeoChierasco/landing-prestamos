@@ -9,6 +9,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// ========== Configuración del negocio ==========
+const NOMBRE_NEGOCIO = 'Alto Valle Préstamos';
+const WHATSAPP_NUMBER = '542993287480';
+
 // ACTIVAR TRUST PROXY PARA RENDER
 app.set('trust proxy', 1);
 
